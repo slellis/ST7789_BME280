@@ -21,7 +21,7 @@ Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RS
 Adafruit_BME280 bme;
 
 // Altitude local para cálculo da pressão ao nível do mar
-#define ALTITUDE_LOCAL 1040.0
+#define ALTITUDE_LOCAL 1018.0
 
 // Variáveis para histórico da pressão e controle de atualização
 float history[40];
@@ -162,7 +162,10 @@ void loop() {
   float temp = bme.readTemperature();
   float hum  = bme.readHumidity();
   float pres = bme.readPressure() / 100.0;  // hPa
-  float pres_nmm = pres / pow(1.0 - (ALTITUDE_LOCAL / 44330.0), 5.255);  // Corrigida
+  //float pres_nmm = pres / pow(1.0 - (ALTITUDE_LOCAL / 44330.0), 5.255);  // Corrigida
+  float temp_K = temp + 273.15;
+  float pres_nmm = pres * pow(1.0 - (0.0065 * ALTITUDE_LOCAL) / (temp_K + 0.0065 * ALTITUDE_LOCAL), -5.257);
+
 
   // Atualiza se valores mudarem
   drawReading("Temperatura", temp, "C", 70, ST77XX_RED, &lastTemp);

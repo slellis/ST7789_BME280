@@ -10,12 +10,12 @@ Este projeto utiliza um **ESP32**, um display **ST7789 SPI 1.9" (170x320)** e um
 
 ## 🛠️ Componentes usados
 
-| Componente      | Descrição                                     |
-|-----------------|-----------------------------------------------|
-| ESP32 (38 pinos)| Microcontrolador principal                    |
-| Display ST7789  | SPI, 1.9", resolução 170x320                  |
+| Componente      | Descrição                                  |
+|----------------|---------------------------------------------|
+| ESP32 (38 pinos) | Microcontrolador principal                 |
+| Display ST7789  | SPI, 1.9", resolução 170x320                |
 | Sensor BME280   | I2C, leitura de temperatura, umidade, pressão |
-| Jumpers, fonte  | Alimentação e conexões básicas                |
+| Jumpers, fonte  | Alimentação e conexões básicas              |
 
 ## 🔌 Ligações
 
@@ -52,9 +52,20 @@ Este sketch realiza:
 
 - Inicialização do display com moldura e ícones gráficos
 - Leitura periódica do BME280
-- Cálculo da pressão ao nível do mar com base em `ALTITUDE_LOCAL`
+- Cálculo da pressão ao nível do mar com base em `ALTITUDE_LOCAL` **e na temperatura lida em tempo real**
 - Exibição somente de valores alterados para minimizar **flicker**
 - Desenho de gráfico com histórico de pressão
+
+### 🧮 Fórmula usada para cálculo da pressão ao nível do mar:
+
+```
+P0 = P1 * (1 - (0.0065 * h) / (T + 0.0065 * h + 273.15))^(-5.257)
+```
+
+- P0: pressão ao nível do mar (hPa)
+- P1: pressão local (hPa)
+- h: altitude local (m)
+- T: temperatura local (°C)
 
 ## 📷 Preview
 
@@ -71,7 +82,7 @@ Instale as seguintes bibliotecas na Arduino IDE:
 
 ## 📐 Ajustes
 
-- Se sua altitude local for diferente de **1040 m**, altere a constante `ALTITUDE_LOCAL` no código.
+- Se sua altitude local for diferente de **1018 m**, altere a constante `ALTITUDE_LOCAL` no código.
 - O display deve estar na **orientação vertical** (rotation 0).
 
 ## 📅 Atualizações
